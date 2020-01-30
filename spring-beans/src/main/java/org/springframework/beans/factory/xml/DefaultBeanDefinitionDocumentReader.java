@@ -144,8 +144,11 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			}
 		}
 
+		//钩子方法 前置处理
 		preProcessXml(root);
+		//解析bean的定义
 		parseBeanDefinitions(root, this.delegate);
+		//钩子方法 后置处理
 		postProcessXml(root);
 
 		this.delegate = parent;
