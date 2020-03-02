@@ -80,6 +80,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	@Nullable
 	private XmlReaderContext readerContext;
 
+	//解析xmlbean定义
 	@Nullable
 	private BeanDefinitionParserDelegate delegate;
 
@@ -178,12 +179,14 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 						parseDefaultElement(ele, delegate);
 					}
 					else {
+						//自定义命名空间解析
 						delegate.parseCustomElement(ele);
 					}
 				}
 			}
 		}
 		else {
+			//自定义命名空间解析
 			delegate.parseCustomElement(root);
 		}
 	}

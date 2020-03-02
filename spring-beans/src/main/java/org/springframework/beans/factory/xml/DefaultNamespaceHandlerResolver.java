@@ -115,6 +115,7 @@ public class DefaultNamespaceHandlerResolver implements NamespaceHandlerResolver
 	@Override
 	@Nullable
 	public NamespaceHandler resolve(String namespaceUri) {
+		//获取已配置的命名空间解析器
 		Map<String, Object> handlerMappings = getHandlerMappings();
 		Object handlerOrClassName = handlerMappings.get(namespaceUri);
 		if (handlerOrClassName == null) {
@@ -124,6 +125,7 @@ public class DefaultNamespaceHandlerResolver implements NamespaceHandlerResolver
 			return (NamespaceHandler) handlerOrClassName;
 		}
 		else {
+			//没注册的通过类名注册
 			String className = (String) handlerOrClassName;
 			try {
 				Class<?> handlerClass = ClassUtils.forName(className, this.classLoader);
@@ -155,11 +157,15 @@ public class DefaultNamespaceHandlerResolver implements NamespaceHandlerResolver
 		if (handlerMappings == null) {
 			synchronized (this) {
 				handlerMappings = this.handlerMappings;
+				//再次判断,防止并发错误
 				if (handlerMappings == null) {
 					if (logger.isDebugEnabled()) {
 						logger.debug("Loading NamespaceHandler mappings from [" + this.handlerMappingsLocation + "]");
 					}
 					try {
+						// handlerMappingsLocation默认 META-INF/spring.handlers
+						// org.springframework.beans.factory.xml.DefaultNamespaceHandlerResolver.DefaultNamespaceHandlerResolver(java.lang.ClassLoader)
+						// org.springframework.beans.factory.xml.XmlBeanDefinitionReader.createDefaultNamespaceHandlerResolver
 						Properties mappings =
 								PropertiesLoaderUtils.loadAllProperties(this.handlerMappingsLocation, this.classLoader);
 						if (logger.isDebugEnabled()) {
