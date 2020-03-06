@@ -514,6 +514,7 @@ public class BeanDefinitionParserDelegate {
 		}
 
 		try {
+			//实例化 AbstractBeanDefinition
 			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
 
 			//解析各种属性 scope lazy-init primary 等

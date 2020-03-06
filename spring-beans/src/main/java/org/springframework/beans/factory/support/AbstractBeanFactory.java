@@ -324,6 +324,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				// Create bean instance.
 				//创建单例bean
 				if (mbd.isSingleton()) {
+					//第一次创建单例bean
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
 							return createBean(beanName, mbd, args);
@@ -1627,7 +1628,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	/**
 	 * Get the object for the given bean instance, either the bean
-	 * instance itself or its created object in case of a FactoryBean.
+	 * instance itself or its created object in case of a FactoryBean.<br>
+	 * 获取给定bean实例的对象，对于FactoryBean，要么是bean实例本身，要么是它创建的对象。
 	 * @param beanInstance the shared bean instance
 	 * @param name name that may include factory dereference prefix
 	 * @param beanName the canonical bean name
@@ -1642,6 +1644,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			if (beanInstance instanceof NullBean) {
 				return beanInstance;
 			}
+			//bean以 & 开头 但beanInstance不是FactoryBean类型的bean
 			if (!(beanInstance instanceof FactoryBean)) {
 				throw new BeanIsNotAFactoryException(beanName, beanInstance.getClass());
 			}
@@ -1650,12 +1653,14 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		// Now we have the bean instance, which may be a normal bean or a FactoryBean.
 		// If it's a FactoryBean, we use it to create a bean instance, unless the
 		// caller actually wants a reference to the factory.
+		//获取FactoryBean实例, beanName以&开头 和 beanInstance
 		if (!(beanInstance instanceof FactoryBean) || BeanFactoryUtils.isFactoryDereference(name)) {
 			return beanInstance;
 		}
 
 		Object object = null;
 		if (mbd == null) {
+			//缓存获取
 			object = getCachedObjectForFactoryBean(beanName);
 		}
 		if (object == null) {
@@ -1665,6 +1670,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			if (mbd == null && containsBeanDefinition(beanName)) {
 				mbd = getMergedLocalBeanDefinition(beanName);
 			}
+			//用户自定义而不是spring本身的
 			boolean synthetic = (mbd != null && mbd.isSynthetic());
 			object = getObjectFromFactoryBean(factory, beanName, !synthetic);
 		}

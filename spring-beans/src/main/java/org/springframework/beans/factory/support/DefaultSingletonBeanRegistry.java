@@ -177,6 +177,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		Object singletonObject = this.singletonObjects.get(beanName);
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
 			synchronized (this.singletonObjects) {
+				//earlySingletonObjects 用于检测循环依赖
 				singletonObject = this.earlySingletonObjects.get(beanName);
 				if (singletonObject == null && allowEarlyReference) {
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
@@ -195,7 +196,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * Return the (raw) singleton object registered under the given name,
 	 * creating and registering a new one if none registered yet.
 	 * @param beanName the name of the bean
-	 * @param singletonFactory the ObjectFactory to lazily create the singleton
+	 * @param singletonFactory the ObjectFactory to lazily create the singleton 接口参数
 	 * with, if necessary
 	 * @return the registered singleton object
 	 */
@@ -212,6 +213,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				if (logger.isDebugEnabled()) {
 					logger.debug("Creating shared instance of singleton bean '" + beanName + "'");
 				}
+				//创建前回调方法 默认记录单例正在创建
 				beforeSingletonCreation(beanName);
 				boolean newSingleton = false;
 				boolean recordSuppressedExceptions = (this.suppressedExceptions == null);
@@ -219,6 +221,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					this.suppressedExceptions = new LinkedHashSet<>();
 				}
 				try {
+					//真正创建单例
 					singletonObject = singletonFactory.getObject();
 					newSingleton = true;
 				}
@@ -242,9 +245,12 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					if (recordSuppressedExceptions) {
 						this.suppressedExceptions = null;
 					}
+					//创建后回调方法 默认移除单例正在创建记录
 					afterSingletonCreation(beanName);
 				}
+				//新创建
 				if (newSingleton) {
+					//加入缓存
 					addSingleton(beanName, singletonObject);
 				}
 			}
@@ -322,6 +328,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	/**
 	 * Return whether the specified singleton bean is currently in creation
 	 * (within the entire factory).
+	 * 单例bean当前是否正在创建中
 	 * @param beanName the name of the bean
 	 */
 	public boolean isSingletonCurrentlyInCreation(String beanName) {
