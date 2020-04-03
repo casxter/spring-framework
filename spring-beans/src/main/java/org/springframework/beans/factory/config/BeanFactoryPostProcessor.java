@@ -37,6 +37,16 @@ import org.springframework.beans.BeansException;
  * If bean instance interaction is required, consider implementing
  * {@link BeanPostProcessor} instead.
  *
+ * 允许自定义修改应用程序上下文的Bean定义，以适应上下文基础Bean工厂的Bean属性值。
+ *
+ * 应用程序上下文可以在其Bean定义中自动检测BeanFactoryPostProcessor Bean，并在创建任何其他Bean之前应用它们。
+ * 对于针对系统管理员的自定义配置文件很有用，这些文件覆盖了在应用程序上下文中配置的Bean属性。
+ *
+ * 请参阅PropertyResourceConfigurer及其具体实现，以获取可解决此类配置需求的即用型解决方案。
+ *
+ * BeanFactoryPostProcessor可以与Bean定义进行交互并对其进行修改，但不能与Bean实例进行交互。
+ * 这样做可能会导致bean实例化过早，从而违反了容器并造成了意外的副作用。如果需要与bean实例交互，请考虑实现BeanPostProcessor。
+ *
  * @author Juergen Hoeller
  * @since 06.07.2003
  * @see BeanPostProcessor
@@ -50,6 +60,9 @@ public interface BeanFactoryPostProcessor {
 	 * initialization. All bean definitions will have been loaded, but no beans
 	 * will have been instantiated yet. This allows for overriding or adding
 	 * properties even to eager-initializing beans.
+	 * 在bean factory标准初始化之后对其进行修改。
+	 * 此时所有bean定义已经被加载，但是还没有bean被实例化。
+	 * 对bean的属性进行重写或者增加修改，甚至对eager-initializing bean也生效。
 	 * @param beanFactory the bean factory used by the application context
 	 * @throws org.springframework.beans.BeansException in case of errors
 	 */

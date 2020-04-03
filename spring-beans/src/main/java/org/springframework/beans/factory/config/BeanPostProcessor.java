@@ -33,6 +33,13 @@ import org.springframework.lang.Nullable;
  * while post-processors that wrap beans with proxies will normally
  * implement {@link #postProcessAfterInitialization}.
  *
+ * 工厂挂钩允许自定义修改新的bean实例，例如检查标记界面或使用代理包装它们。
+ * ApplicationContexts可以在它们的bean定义中自动检测BeanPostProcessor bean，并将它们应用于随后创建的任何bean。
+ * 普通bean工厂允许对后处理器进行程序化注册，适用于通过该工厂创建的所有bean。
+ * 通常，通过标记接口等填充bean的后处理器将实现postProcessBeforeInitialization，而使用代理包装bean的后处理器通常将实现postProcessAfterInitialization。
+ *
+ * bean对象创建 -> bean属性填充 -> postProcessBeforeInitialization(bean,beanName) -> bean初始化 -> postProcessAfterInitialization(bean,beanName)
+ *
  * @author Juergen Hoeller
  * @since 10.10.2003
  * @see InstantiationAwareBeanPostProcessor
@@ -48,6 +55,8 @@ public interface BeanPostProcessor {
 	 * or a custom init-method). The bean will already be populated with property values.
 	 * The returned bean instance may be a wrapper around the original.
 	 * <p>The default implementation returns the given {@code bean} as-is.
+	 *
+	 * bean初始化之前调用
 	 * @param bean the new bean instance
 	 * @param beanName the name of the bean
 	 * @return the bean instance to use, either the original or a wrapped one;
@@ -73,6 +82,8 @@ public interface BeanPostProcessor {
 	 * {@link InstantiationAwareBeanPostProcessor#postProcessBeforeInstantiation} method,
 	 * in contrast to all other BeanPostProcessor callbacks.
 	 * <p>The default implementation returns the given {@code bean} as-is.
+	 *
+	 *  bean初始化之后调用
 	 * @param bean the new bean instance
 	 * @param beanName the name of the bean
 	 * @return the bean instance to use, either the original or a wrapped one;
