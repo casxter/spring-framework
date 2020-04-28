@@ -100,6 +100,7 @@ public class ResourceEditorRegistrar implements PropertyEditorRegistrar {
 	@Override
 	public void registerCustomEditors(PropertyEditorRegistry registry) {
 		ResourceEditor baseEditor = new ResourceEditor(this.resourceLoader, this.propertyResolver);
+//		设置各种值注入器
 		doRegisterEditor(registry, Resource.class, baseEditor);
 		doRegisterEditor(registry, ContextResource.class, baseEditor);
 		doRegisterEditor(registry, InputStream.class, new InputStreamEditor(baseEditor));
