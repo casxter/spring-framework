@@ -492,17 +492,26 @@ public class DispatcherServlet extends FrameworkServlet {
 
 	/**
 	 * Initialize the strategy objects that this servlet uses.
+	 * 初始化 spring mvc所需要的变量对象
 	 * <p>May be overridden in subclasses in order to initialize further strategy objects.
 	 */
 	protected void initStrategies(ApplicationContext context) {
+		//Multipart 处理 比如form中文件上传下载
 		initMultipartResolver(context);
+		//国际化处理
 		initLocaleResolver(context);
+		//主题处理
 		initThemeResolver(context);
+		//初始化 handlermappings 对应 请求处理
 		initHandlerMappings(context);
+		//初始化 处理适配器
 		initHandlerAdapters(context);
 		initHandlerExceptionResolvers(context);
+		//Controller 没返回View对象或者视图名 这里会用约定的View 转换
+		//默认实现 org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator
 		initRequestToViewNameTranslator(context);
 		initViewResolvers(context);
+
 		initFlashMapManager(context);
 	}
 
