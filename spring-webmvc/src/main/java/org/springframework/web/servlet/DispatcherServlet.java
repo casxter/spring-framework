@@ -916,6 +916,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 
 		// Make framework objects available to handlers and view objects.
+		//传递 localeResolver themeResolver wac THEME_SOURCE
 		request.setAttribute(WEB_APPLICATION_CONTEXT_ATTRIBUTE, getWebApplicationContext());
 		request.setAttribute(LOCALE_RESOLVER_ATTRIBUTE, this.localeResolver);
 		request.setAttribute(THEME_RESOLVER_ATTRIBUTE, this.themeResolver);
@@ -966,17 +967,21 @@ public class DispatcherServlet extends FrameworkServlet {
 			Exception dispatchException = null;
 
 			try {
+				//检测是 MultipartHttpServletRequest的请求 是的话 转换
 				processedRequest = checkMultipart(request);
 				multipartRequestParsed = (processedRequest != request);
 
 				// Determine handler for the current request.
+				// 根据request 找 handler
 				mappedHandler = getHandler(processedRequest);
 				if (mappedHandler == null) {
+					// 没有找到handler 返回错误信息
 					noHandlerFound(processedRequest, response);
 					return;
 				}
 
 				// Determine handler adapter for the current request.
+				// 根据 handle找 HandlerAdapter
 				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
 				// Process last-modified header, if supported by the handler.
@@ -992,18 +997,20 @@ public class DispatcherServlet extends FrameworkServlet {
 					}
 				}
 
+				//preHandle 调用
 				if (!mappedHandler.applyPreHandle(processedRequest, response)) {
 					return;
 				}
 
-				// Actually invoke the handler.
+				// Actually invoke the handler. 调用handler
 				mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
 
 				if (asyncManager.isConcurrentHandlingStarted()) {
 					return;
 				}
-
+				//视图名转换需要添加前后缀情况
 				applyDefaultViewName(processedRequest, mv);
+				//postHandle 方法调用
 				mappedHandler.applyPostHandle(processedRequest, response, mv);
 			}
 			catch (Exception ex) {
@@ -1054,6 +1061,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	/**
 	 * Handle the result of handler selection and handler invocation, which is
 	 * either a ModelAndView or an Exception to be resolved to a ModelAndView.
+	 * mv渲染或者异常处理在渲染mv、
 	 */
 	private void processDispatchResult(HttpServletRequest request, HttpServletResponse response,
 			@Nullable HandlerExecutionChain mappedHandler, @Nullable ModelAndView mv,
@@ -1075,6 +1083,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		// Did the handler return a view to render?
 		if (mv != null && !mv.wasCleared()) {
+			//处理返回结果
 			render(mv, request, response);
 			if (errorView) {
 				WebUtils.clearErrorRequestAttributes(request);
@@ -1093,6 +1102,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 
 		if (mappedHandler != null) {
+			//请求处理完成回调
 			mappedHandler.triggerAfterCompletion(request, response, null);
 		}
 	}
@@ -1331,6 +1341,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			if (mv.getStatus() != null) {
 				response.setStatus(mv.getStatus().value());
 			}
+			// 处理返回结果
 			view.render(mv.getModelInternal(), request, response);
 		}
 		catch (Exception ex) {
