@@ -975,7 +975,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				// 根据request 找 handler
 				mappedHandler = getHandler(processedRequest);
 				if (mappedHandler == null) {
-					// 没有找到handler 返回错误信息
+					// 没有找到handler 返回错误信息 直接通过response返回 404
 					noHandlerFound(processedRequest, response);
 					return;
 				}
