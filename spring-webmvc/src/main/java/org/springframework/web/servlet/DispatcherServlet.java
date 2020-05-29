@@ -997,7 +997,7 @@ public class DispatcherServlet extends FrameworkServlet {
 					}
 				}
 
-				//preHandle 调用
+				//HandlerInterceptor preHandle 调用
 				if (!mappedHandler.applyPreHandle(processedRequest, response)) {
 					return;
 				}
@@ -1010,7 +1010,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				}
 				//视图名转换需要添加前后缀情况
 				applyDefaultViewName(processedRequest, mv);
-				//postHandle 方法调用
+				// HandlerInterceptor postHandle 方法调用
 				mappedHandler.applyPostHandle(processedRequest, response, mv);
 			}
 			catch (Exception ex) {
@@ -1024,6 +1024,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
 		}
 		catch (Exception ex) {
+			//HandlerInterceptor
 			triggerAfterCompletion(processedRequest, response, mappedHandler, ex);
 		}
 		catch (Throwable err) {
