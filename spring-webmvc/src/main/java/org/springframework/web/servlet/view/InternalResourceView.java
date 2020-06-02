@@ -167,6 +167,7 @@ public class InternalResourceView extends AbstractUrlBasedView {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Forwarding to resource [" + getUrl() + "] in InternalResourceView '" + getBeanName() + "'");
 			}
+			//使用servletapi规范跳转
 			rd.forward(request, response);
 		}
 	}

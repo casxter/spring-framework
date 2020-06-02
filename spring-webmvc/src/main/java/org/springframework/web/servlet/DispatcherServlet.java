@@ -1021,6 +1021,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				// making them available for @ExceptionHandler methods and other scenarios.
 				dispatchException = new NestedServletException("Handler dispatch failed", err);
 			}
+			//mv渲染或者异常处理再渲染mv
 			processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
 		}
 		catch (Exception ex) {
@@ -1062,7 +1063,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	/**
 	 * Handle the result of handler selection and handler invocation, which is
 	 * either a ModelAndView or an Exception to be resolved to a ModelAndView.
-	 * mv渲染或者异常处理在渲染mv、
+	 * mv渲染或者异常处理再渲染mv
 	 */
 	private void processDispatchResult(HttpServletRequest request, HttpServletResponse response,
 			@Nullable HandlerExecutionChain mappedHandler, @Nullable ModelAndView mv,
@@ -1070,6 +1071,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		boolean errorView = false;
 
+		//异常处理
 		if (exception != null) {
 			if (exception instanceof ModelAndViewDefiningException) {
 				logger.debug("ModelAndViewDefiningException encountered", exception);
@@ -1271,6 +1273,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		// Check registered HandlerExceptionResolvers...
 		ModelAndView exMv = null;
 		if (this.handlerExceptionResolvers != null) {
+			//HandlerExceptionResolver 处理异常
 			for (HandlerExceptionResolver handlerExceptionResolver : this.handlerExceptionResolvers) {
 				exMv = handlerExceptionResolver.resolveException(request, response, handler, ex);
 				if (exMv != null) {

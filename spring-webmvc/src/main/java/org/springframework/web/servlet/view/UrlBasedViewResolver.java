@@ -470,6 +470,7 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 			return null;
 		}
 
+		//http 重定向
 		// Check for special "redirect:" prefix.
 		if (viewName.startsWith(REDIRECT_URL_PREFIX)) {
 			String redirectUrl = viewName.substring(REDIRECT_URL_PREFIX.length());

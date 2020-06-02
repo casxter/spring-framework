@@ -86,6 +86,7 @@ public interface HandlerInterceptor {
 	 * request processing. For more details see
 	 * {@link org.springframework.web.servlet.AsyncHandlerInterceptor}.
 	 * <p>The default implementation returns {@code true}.
+	 * 在确定HandlerAdapter对象之后,在HandlerAdapter.handle() 之前调用
 	 * @param request current HTTP request
 	 * @param response current HTTP response
 	 * @param handler chosen handler to execute, for type and/or instance evaluation
@@ -112,6 +113,7 @@ public interface HandlerInterceptor {
 	 * request processing. For more details see
 	 * {@link org.springframework.web.servlet.AsyncHandlerInterceptor}.
 	 * <p>The default implementation is empty.
+	 * 在HandlerAdapter.handle()之后调用
 	 * @param request current HTTP request
 	 * @param response current HTTP response
 	 * @param handler handler (or {@link HandlerMethod}) that started asynchronous
@@ -137,6 +139,7 @@ public interface HandlerInterceptor {
 	 * request processing. For more details see
 	 * {@link org.springframework.web.servlet.AsyncHandlerInterceptor}.
 	 * <p>The default implementation is empty.
+	 * 请求处理完成之后,包括视图渲染之后
 	 * @param request current HTTP request
 	 * @param response current HTTP response
 	 * @param handler handler (or {@link HandlerMethod}) that started asynchronous
